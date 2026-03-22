@@ -1,0 +1,50 @@
+# Show hidden files such as dotfiles
+set hidden true
+
+# Draw interface borders
+set drawbox true
+
+# Show icons if terminal/font supports them
+set icons true
+
+# Ignore case while searching
+set ignorecase true
+
+# Search interactively while typing
+set incsearch true
+
+# Show item numbers in the list
+set number true
+
+# Enable preview pane, provided a previewer is configured
+set preview true
+
+# Enter = open selected file
+map <enter> open
+
+# Shift+D = delete selected file
+map D delete
+
+# rr = reload current view
+map rr reload
+
+# Custom open behavior
+## nvim as default text editor
+cmd open ${{
+    case "$(file --mime-type -Lb "$f")" in
+        # Open text files in Neovim or in the editor defined by $EDITOR
+        text/*) ${EDITOR:-nvim} "$f" ;;
+
+        # Open all other file types with the system default application
+        *) xdg-open "$f" >/dev/null 2>&1 ;;
+    esac
+}}
+
+## new file
+cmd mkfile ${{
+    printf "File name: "
+    read name
+    [ -n "$name" ] && touch -- "$name"
+}}
+
+map a mkfile
