@@ -1,0 +1,82 @@
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt autocd beep extendedglob nomatch notify
+bindkey -v
+# End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename "${HOME}/.zshrc"
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+export EDITOR=nvim
+export VISUAL=nvim
+alias vim=nvim
+
+export PATH="$HOME/.local/bin:$HOME/.local/npm/bin:$PATH"
+
+__conda_root="${HOME}/miniforge3"
+__conda_setup="$("${__conda_root}/bin/conda" shell.zsh hook 2>/dev/null || true)"
+if [[ -n "${__conda_setup}" ]]; then
+  eval "${__conda_setup}"
+elif [[ -f "${__conda_root}/etc/profile.d/conda.sh" ]]; then
+  . "${__conda_root}/etc/profile.d/conda.sh"
+elif [[ -d "${__conda_root}/bin" ]]; then
+  export PATH="${__conda_root}/bin:$PATH"
+fi
+unset __conda_setup
+
+export MAMBA_EXE="${__conda_root}/bin/mamba"
+export MAMBA_ROOT_PREFIX="${__conda_root}"
+if [[ -x "${MAMBA_EXE}" ]]; then
+  __mamba_setup="$("${MAMBA_EXE}" shell hook --shell zsh --root-prefix "${MAMBA_ROOT_PREFIX}" 2>/dev/null || true)"
+  if [[ -n "${__mamba_setup}" ]]; then
+    eval "${__mamba_setup}"
+  else
+    alias mamba="${MAMBA_EXE}"
+  fi
+  unset __mamba_setup
+fi
+
+lfcd() {
+  local tmp
+  local dir
+
+  tmp="$(mktemp)"
+  command lf -last-dir-path="$tmp" "$@"
+
+  if [[ -f "$tmp" ]]; then
+    dir="$(<"$tmp")"
+    rm -f -- "$tmp"
+    if [[ -d "$dir" && "$dir" != "$PWD" ]]; then
+      cd "$dir" || return
+    fi
+  fi
+}
+
+_tmux_update_conda_env() {
+  [[ -n "${TMUX:-}" ]] || return
+
+  if [[ -n "${CONDA_DEFAULT_ENV:-}" ]]; then
+    tmux set-environment -g CONDA_DEFAULT_ENV "${CONDA_DEFAULT_ENV}" >/dev/null 2>&1
+  else
+    tmux set-environment -gru CONDA_DEFAULT_ENV >/dev/null 2>&1
+  fi
+
+  tmux refresh-client -S >/dev/null 2>&1
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _tmux_update_conda_env
+
+alias lf='lfcd'
+
+source <(fzf --zsh)
+eval "$(zoxide init zsh)"
+
+if command -v oh-my-posh >/dev/null 2>&1; then
+  eval "$(oh-my-posh init zsh --config catppuccin_mocha)"
+fi
