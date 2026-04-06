@@ -1,5 +1,4 @@
 #!/bin/sh
-
 picom &
 feh --bg-fill "$HOME/Obrazy/tapety/arch_wallpaper1.jpg" "$HOME/Obrazy/tapety/arch_wallpaper1.jpg" &
 exec dwm
