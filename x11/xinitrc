@@ -1,4 +1,19 @@
 #!/bin/sh
 picom &
-feh --bg-fill "$HOME/Obrazy/tapety/arch_wallpaper1.jpg" "$HOME/Obrazy/tapety/arch_wallpaper1.jpg" &
+
+# ustawienia monitorów
+if xrandr | grep "^DP1-2 connected" >/dev/null && xrandr | grep "^DP1-3 connected" >/dev/null; then
+    ~/.screenlayout/dock-home.sh &
+fi
+
+# opóźnienie, żeby X odświeżył geometrię ekranów
+sleep 1
+
+# ustawienia tapety
+feh --bg-fill "$HOME/Obrazy/tapety/arch_wallpaper1.png" "$HOME/Obrazy/tapety/arch_wallpaper1.png" "$HOME/Obrazy/tapety/arch_wallpaper1.png" &
+
+# ustawienia klawiatury
+setxkbmap -layout pl &
+
+# start dwm
 exec dwm
