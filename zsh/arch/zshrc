@@ -41,6 +41,9 @@ if [[ -x "${MAMBA_EXE}" ]]; then
   unset __mamba_setup
 fi
 
+# poprawne ścieżki dla terminala po załadowaniu condy
+export TERMINFO_DIRS="/usr/lib/kitty/terminfo:/usr/share/terminfo"
+
 lfcd() {
   local tmp
   local dir
