@@ -23,6 +23,7 @@ window#waybar {
 #clock,
 #pulseaudio,
 #network,
+#disk,
 #cpu,
 #memory,
 #battery,

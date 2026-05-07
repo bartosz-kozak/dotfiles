@@ -5,7 +5,7 @@
 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["clock"],
-  "modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "tray"],
+  "modules-right": ["pulseaudio", "network", "disk", "cpu", "memory", "battery", "tray"],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -27,6 +27,13 @@
     "format-disconnected": "󰖪  offline"
   },
 
+  "disk": {
+    "interval": 300,
+    "path": "/",
+    "format": "󰋊 {percentage_used}%",
+    "tooltip-format": "{used} used out of {total} on {path}"
+  },
+
   "cpu": {
     "format": "  {usage}%"
   },
@@ -41,6 +48,7 @@
   },
 
   "tray": {
+    "icon-size": 16,
     "spacing": 10
   }
 }
