@@ -60,6 +60,15 @@ lfcd() {
   fi
 }
 
+# funkcja do wyjścia w aktualnym katalogu yazi alias y
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
+}
+
 _tmux_update_conda_env() {
   [[ -n "${TMUX:-}" ]] || return
 
@@ -83,3 +92,6 @@ eval "$(zoxide init zsh)"
 if command -v oh-my-posh >/dev/null 2>&1; then
   eval "$(oh-my-posh init zsh --config catppuccin_mocha)"
 fi
+
+# opencode
+export PATH=/home/bartek/.opencode/bin:$PATH
